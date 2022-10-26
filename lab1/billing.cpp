@@ -16,23 +16,25 @@ std::istream &operator>>(std::istream &is, Polaczenie &p) {
 }
 
 Billing::Billing(std::istream &is) {
-    std::ifstream file("dane01.txt");
+    std::cout<<"Podaj nazwe pliku"<<std::endl;
+    std::string nazwa;
+    is>>nazwa;
+    std::ifstream file(nazwa);
     if(!file){
-        std::cerr<<"Nie mozna otworzyc pliku"<<std::endl;
+        std::cerr<<"Nie mozna otworzyc pliku :("<<std::endl;
         exit(0);
     }
 
     Polaczenie polaczenie;
-    while(file>>polaczenie) {
+    while(file>>polaczenie) 
         blng_.push_back(polaczenie);
-    }
 
     //for(auto vec : blng_)
       // std::cout<<vec.dzien<<"\t"<<vec.nr<<"\t"<<vec.czas<<"\t"<<vec.kod()<<std::endl;
 }
 
 void Billing::statystykaDzienna (std::ostream &os) const {
-    std::vector <unsigned> stat (31, 0); // przechowuje liczbę połączeń każdego dnia
+    std::vector <unsigned> stat (31, 0); 
     for(auto pol : blng_)
         stat[pol.dzien-1]++;
 
@@ -49,13 +51,19 @@ void Billing::statystykaDzienna (std::ostream &os) const {
 }
 void Billing::statystykaKrajowa (std::ostream &os) const {
     std::map <std::string, Histogram> stat; // osobna statystyka dla każdego kodu
-    for(auto pol : blng_) {
+    for(auto pol : blng_) 
+        stat[pol.kod()] = Histogram();
+
         //stat.insert(std::make_pair(pol.kod(), Histogram()));
         //std::cout<<pol.kod()<<std::endl;
-        stat[pol.kod()] = Histogram();
-    }
-    std::cout<<stat.size()<<std::endl;
-    // Przelatuje całą tablicę blng_ i wrzuca czasy rozmów do
-    // odpowiednich histogramów w stat
-    // Formatuje i wyświetla wyniki na os
+
+    for(auto pol : blng_) 
+        stat[pol.kod()].dodaj(pol.czas);
+
+    std::cout<<"Kraj:\tRozmiar\tSred.\tOdch.\tMin\tMax\t"<<std::endl;
+    std::cout<<std::fixed<<std::setprecision(2);
+    for(auto const& [i,h] : stat) 
+        std::cout<<i<<":\t"<<h.rozmiar()<<"\t"<<h.srednia()<<"\t"<<h.odchylenie()<<"\t"<<h.min()<<"\t"<<h.max()<<"\t"<<std::endl;
+
+
 }   

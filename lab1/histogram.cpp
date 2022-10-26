@@ -1,9 +1,9 @@
 #include "histogram.hpp"
 #include <algorithm>
+#include <math.h>
 
 
 Histogram::Histogram () {
-    //std::cout<<"Stworzony"<<std::endl;
 }
 
 void Histogram::dodaj(float x) {
@@ -15,19 +15,25 @@ size_t Histogram::rozmiar () const {
 }
 float Histogram::srednia () const {
     float sr = 0;
-    std::for_each(dane_.begin(),dane_.end(),[&](float a){sr+=a/rozmiar();});
+    std::for_each(dane_.begin(),dane_.end(),[&](float a){sr += a/rozmiar();});
+    srednia_ = sr;
     return sr;
 
-} // użyj std::for_each() !
+} 
 
 float Histogram::odchylenie () const {
+    float licznik = 0;
+    std::for_each(dane_.begin(),dane_.end(),[&](float a){licznik += pow(a-srednia_,2);});
+    licznik = sqrt(licznik);
+    odchylenie_ = licznik/sqrt(rozmiar());
+    return licznik/sqrt(rozmiar());
 
-} // użyj std::for_each() !
+} 
 
 float Histogram::max () const {
-
-} // użyj std::max_element() !
+    return *std::max_element(dane_.begin(),dane_.end());
+}
 
 float Histogram::min () const{
-
-} // użyj std::min_element() !
+    return *std::min_element(dane_.begin(),dane_.end());
+}

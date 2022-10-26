@@ -9,14 +9,14 @@ class Histogram {
         Histogram ();
         void dodaj (float x);
         size_t rozmiar () const;
-        float srednia () const; // użyj std::for_each() !
-        float odchylenie () const; // użyj std::for_each() !
-        float max () const; // użyj std::max_element() !
-        float min () const; // użyj std::min_element() !
+        float srednia () const;
+        float odchylenie () const; 
+        float max () const; 
+        float min () const;
     private:
         std::vector<float> dane_;
-        mutable bool srednia_akt_;
-        mutable bool odchylenie_akt_;
+        //mutable bool srednia_akt_;
+        //mutable bool odchylenie_akt_;
         mutable float srednia_;
         mutable float odchylenie_;
 };

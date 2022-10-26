@@ -7,18 +7,18 @@
 struct Polaczenie {
     unsigned dzien;
     std::string nr;
-    float czas; // czas połączenia
-    std::string kod () const; // zwraca dwucyfrowy kod międzynarodowy
+    float czas; 
+    std::string kod () const; 
 };
     
 std::istream &operator>> (std::istream &is, Polaczenie &p);
 
 class Billing {
     public:
-        explicit Billing (std::istream &is); // wczytuje połączenia z is
+        explicit Billing (std::istream &is);
         void statystykaDzienna (std::ostream &os) const;
         void statystykaKrajowa (std::ostream &os) const;
     private:
-        std::vector <Polaczenie> blng_; // tablica połączeń
+        std::vector <Polaczenie> blng_; 
 };
 #endif

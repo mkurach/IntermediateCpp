@@ -15,8 +15,8 @@ class Histogram {
         float min () const;
     private:
         std::vector<float> dane_;
-        //mutable bool srednia_akt_;
-        //mutable bool odchylenie_akt_;
+        mutable bool srednia_akt_;
+        mutable bool odchylenie_akt_;
         mutable float srednia_;
         mutable float odchylenie_;
 };

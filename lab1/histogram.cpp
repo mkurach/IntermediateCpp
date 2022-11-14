@@ -4,6 +4,8 @@
 
 
 Histogram::Histogram () {
+    srednia_akt_ = false;
+    odchylenie_akt_ = false;
 }
 
 void Histogram::dodaj(float x) {
@@ -14,19 +16,31 @@ size_t Histogram::rozmiar () const {
     return dane_.size();
 }
 float Histogram::srednia () const {
-    float sr = 0;
-    std::for_each(dane_.begin(),dane_.end(),[&](float a){sr += a/rozmiar();});
-    srednia_ = sr;
-    return sr;
+    if(srednia_akt_)
+        return srednia_;
+    else {
+        srednia_ = 0;
+        std::for_each(dane_.begin(),dane_.end(),[&](float a){srednia_ += a;});
+        srednia_ /= rozmiar();
+        srednia_akt_ = true;
+        return srednia_;        
+    }
 
 } 
 
 float Histogram::odchylenie () const {
-    float licznik = 0;
-    std::for_each(dane_.begin(),dane_.end(),[&](float a){licznik += pow(a-srednia_,2);});
-    licznik = sqrt(licznik);
-    odchylenie_ = licznik/sqrt(rozmiar());
-    return licznik/sqrt(rozmiar());
+    if(odchylenie_akt_ && srednia_akt_)
+        return odchylenie_;
+    else {
+        if (!srednia_akt_)
+            srednia();
+        odchylenie_ = 0;
+        std::for_each(dane_.begin(),dane_.end(),[&](float a){odchylenie_ += (a-srednia_)*(a-srednia_);});
+        odchylenie_ = sqrt(odchylenie_)/sqrt(rozmiar());
+        odchylenie_akt_ = true;
+        return odchylenie_;
+    }
+    
 
 } 
 

@@ -16,21 +16,10 @@ std::istream &operator>>(std::istream &is, Polaczenie &p) {
 }
 
 Billing::Billing(std::istream &is) {
-    std::cout<<"Podaj nazwe pliku"<<std::endl;
-    std::string nazwa;
-    is>>nazwa;
-    std::ifstream file(nazwa);
-    if(!file){
-        std::cerr<<"Nie mozna otworzyc pliku :("<<std::endl;
-        exit(0);
-    }
 
     Polaczenie polaczenie;
-    while(file>>polaczenie) 
+    while(is>>polaczenie) 
         blng_.push_back(polaczenie);
-
-    //for(auto vec : blng_)
-      // std::cout<<vec.dzien<<"\t"<<vec.nr<<"\t"<<vec.czas<<"\t"<<vec.kod()<<std::endl;
 }
 
 void Billing::statystykaDzienna (std::ostream &os) const {
@@ -50,7 +39,7 @@ void Billing::statystykaDzienna (std::ostream &os) const {
     os<<"\nWYKONANYCH POLACZEN: "<<N<<std::endl;
 }
 void Billing::statystykaKrajowa (std::ostream &os) const {
-    std::map <std::string, Histogram> stat; // osobna statystyka dla każdego kodu
+    std::map <std::string, Histogram> stat; 
     for(auto pol : blng_) 
         stat[pol.kod()] = Histogram();
 

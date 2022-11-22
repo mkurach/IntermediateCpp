@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         std::ifstream fileIn;
         fileIn.open(argv[1]);
         if (!fileIn) {
-            std::cout<<"Nie da się otworzyć! :("<<std::endl;
+            std::cout<<"Nie da się otworzyć1! :("<<std::endl;
             exit(1);
         }
         std::string x;
@@ -41,23 +41,26 @@ int main(int argc, char *argv[]) {
     //MENU
     bool go = true;
     int option = 0;
+    std::cout<<dane.size();
     while(go) {
         std::cout<<"\nWybierz plik, który chcesz przeanalizować: "<<std::endl;
-        for(int i = 0; i < dane.size(); i++) 
+        for(unsigned int i = 0; i < dane.size(); i++) 
             std::cout<<i+1<<" - "<<dane[i]->nazwa()<<std::endl;
         std::cout<<"\n0 - koniec programu\n"<<std::endl;
         std::cin>>option;
         if(option == 0)
             go = false;
         else {
+            dane[option-1]->dane();
             
         }
 
     }
 
 
-    
 
+    
+    dane.clear();
     return 0;
 
 }

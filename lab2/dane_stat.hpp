@@ -17,9 +17,8 @@ class DaneStat {// klasa bazowa
 class DaneStatProxy : public DaneStat { // proxy - wczytuje prawdziwy obiekt przy pierwszym użyciu
     private:
         mutable DaneStat *danestat_;
-        std::string nazwa_;
     public: 
-        DaneStatProxy (std::string nazwa) : DaneStat(nazwa), nazwa_ (nazwa), danestat_(NULL) {}
+        DaneStatProxy (std::string nazwa) : DaneStat(nazwa), danestat_(NULL) {}
         ~DaneStatProxy () {delete danestat_;}
         virtual const std::vector <float> &dane () const;
 
@@ -32,7 +31,7 @@ class DaneStatReal : public DaneStat { // "prawdziwy" obiekt przechowujacy dane
         std::string nazwa_;
         mutable std::vector<float> dane_;
     public:
-        DaneStatReal(std::string nazwa) : DaneStat(nazwa), nazwa_(nazwa) {}
+        DaneStatReal(std::string nazwa);
         virtual const std::vector <float> &dane () const;
         
 

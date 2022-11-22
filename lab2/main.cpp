@@ -31,29 +31,65 @@ int main(int argc, char *argv[]) {
     
 
 
-    /*FabrykaRozkladow::rejestruj (&RozkladGaussa::kreator, std::string("Rozklad Gaussa"));
+    FabrykaRozkladow::rejestruj (&RozkladGaussa::kreator, std::string("Rozklad Gaussa"));
     FabrykaRozkladow::rejestruj (&RozkladLorentza::kreator, std::string("Rozklad Lorentza"));
-    FabrykaRozkladow::rejestruj (&RozkladPoisson::kreator, std::string("Rozklad Poissona"));
+    FabrykaRozkladow::rejestruj (&RozkladPoissona::kreator, std::string("Rozklad Poissona"));
 
-    // Tworzy miziadelko do obliczania statystyk
-    std::unique_ptr <Rozklad> rozkl (FabrykaRozkladow::utworz (wybor_r, dane[wybor-1]->dane ()));*/
+
 
     //MENU
-    bool go = true;
-    int option = 0;
-    std::cout<<dane.size();
-    while(go) {
+    unsigned wybor_plik = 0;
+    unsigned wybor_rozkl = 0;
+    unsigned wybor_end = 0;
+
+    while(true) {
+
         std::cout<<"\nWybierz plik, który chcesz przeanalizować: "<<std::endl;
-        for(unsigned int i = 0; i < dane.size(); i++) 
+        for(unsigned i = 0; i < dane.size(); i++) 
             std::cout<<i+1<<" - "<<dane[i]->nazwa()<<std::endl;
-        std::cout<<"\n0 - koniec programu\n"<<std::endl;
-        std::cin>>option;
-        if(option == 0)
-            go = false;
-        else {
-            dane[option-1]->dane();
-            
+        std::cout<<"\nWybór pliku: ";
+        std::cin>>wybor_plik;
+        std::cout<<"\n******"<<std::endl;
+        if(wybor_plik > dane.size()) {
+            std::cout<<"Nie ma takiego numeru :("<<std::endl;
         }
+        else {
+            std::cout<<"\nWybierz rozkład: "<<std::endl;
+            for(unsigned i = 1 ; i < FabrykaRozkladow::ilosc(); i++)
+                std::cout<<i<<" - "<<FabrykaRozkladow::nazwa(i)<<std::endl;
+            std::cout<<"\nWybór rozkładu: ";
+            std::cin>>wybor_rozkl;
+            std::cout<<"\n******"<<std::endl;
+            if(wybor_rozkl > FabrykaRozkladow::ilosc()) {
+                std::cout<<"Nie ma takiego rozkladu :("<<std::endl;
+            }
+            else {
+                std::cout<<"\nLiczę...\n"<<std::endl;
+                std::unique_ptr <Rozklad> rozkl (FabrykaRozkladow::utworz (wybor_rozkl, dane[wybor_plik-1]->dane ()));
+                std::unique_ptr <ParametryRozkladu> params = rozkl->oblicz();
+
+                for(auto [i,j] : *params)
+                    std::cout<<i<<":\t\t "<<j<<std::endl;
+
+                std::cout<<"\n******\n"<<std::endl;
+                std::cout<<"1 - kontynuuj"<<std::endl;
+                std::cout<<"0 - koniec"<<std::endl;
+                std::cin>>wybor_end;
+
+                if(wybor_end == 0)
+                    break;
+
+            }
+
+
+
+        }
+            
+
+    
+
+
+
 
     }
 

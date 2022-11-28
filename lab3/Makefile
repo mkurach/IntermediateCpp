@@ -1,6 +1,6 @@
 CC = g++
 LIBS = -lm
-CFLAGS = -Wall -pedantic -O2 -std=c++17
+CFLAGS = -Wall -pedantic -O2 -std=c++17 -lboost_system -lboost_thread -lpthread
 
 all: lab3
 lab3: main.o macierz.o mnozenie_macierzy.o

@@ -21,6 +21,7 @@ class KontrolerMnozenia {
         const Macierz &m1_; // pierwszy czynnik (stała referencja)
         const Macierz &m2_; // drugi czynnik (stała referencja)
         Macierz &m3_; // wynik mnożenia
+        int co_policzone_;
 };
 
 // Funkcja mnożąca macierze m1 i m2 w p wątkach

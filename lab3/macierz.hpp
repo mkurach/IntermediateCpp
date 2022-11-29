@@ -13,6 +13,8 @@ class Macierz{
         int element (int i, int j) const; // zwraca element macierzy (kopia przez wartość)
         int &element (int i, int j); // zwraca ref. (można modyfikować!) do el. macierzy
         RozmiarMacierzy rozmiar () const; // zwraca rozmiar macierzy
+        Polozenie element2polozenie(int i);
+
     private:
         int n_;
         int m_;

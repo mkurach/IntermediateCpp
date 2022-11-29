@@ -27,6 +27,11 @@ int Macierz::element(int i, int j) const {
 int& Macierz::element (int i, int j) {
     return mac_[i*m_ +j];
 }
+Polozenie Macierz::element2polozenie(int i) {
+    int c = i%m_;
+    int r = (i-c)/m_;
+    return std::make_pair(r,c);
+}
 
 RozmiarMacierzy Macierz::rozmiar() const {
     return std::make_pair(n_,m_);

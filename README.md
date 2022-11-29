@@ -13,3 +13,7 @@ Codes from intermediate C++ laboratories.
 - factory template
 - maps, unique pointers
 - static methods and variables, inheritated classes
+
+**lab3**
+- working on threads
+- counting elapsed time

@@ -7,11 +7,13 @@ Grid::Grid(int x, int y) {
 
     size_ = std::make_pair(x,y);
     image_.create(x,y);
-    heatTransf = 0.25;
-    tMax = 100;
+    heatTransf_ = 0.25;
+    tMax_ = 100;
+    sprayRadius_ = 0;
+    color_ = 'R';
 
     //initialize temperatures and colors
-    std::vector<std::vector<double>> vec( x, std::vector<double> (y, -tMax));
+    std::vector<std::vector<double>> vec( x, std::vector<double> (y, -tMax_));
     temp_ = vec;
 
 
@@ -23,23 +25,49 @@ Grid::Grid(int x, int y) {
     for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
             if( (i-xS)*(i-xS) + (j-yS)*(j-yS) < r*r)
-                temp_[i][j] = tMax;
+                temp_[i][j] = tMax_;
             image_.setPixel(i,j,makeCol(temp_[i][j]));
         }
     }
     tempTmp_ = temp_;
 
-
-
-
 }
 
 sf::Color Grid::makeCol(double t) {
     sf::Color col(0,0,0);
-    col.r = (int)(1/(1+exp(-t*2.0/tMax))*255);
-    col.b = 255 - (int)(1/(1+exp(-t*2.0/tMax))*255);
+    switch(color_) {
+        case 'R':
+            col.r = (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        case 'O':
+            col.b = (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        case 'G':
+            col.g = (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        case 'Y':
+            col.g = 225;
+            col.r = 225;
+            col.b = 255 - (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        case 'V':
+            col.r = 255;
+            col.b = 255;
+            col.g = 255 - (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        case 'C':
+            col.g = 255;
+            col.b = 255;
+            col.r = 255 - (int)(1/(1+exp(-t*2.0/tMax_))*255);
+            break;
+        
+    }
 
     return col;
+}
+
+void Grid::setColor(char i) {
+    color_ = i;
 }
 
 void Grid::updateImage() {
@@ -56,7 +84,7 @@ void Grid::updateImage() {
             if(y!=(getSize().second -1))  // po prawo
                 deltaT += (temp_[x][y] - temp_[x][y+1]);
 
-            tempTmp_[x][y] -= heatTransf*deltaT;
+            tempTmp_[x][y] -= heatTransf_*deltaT;
             deltaT = 0;        
 
         }
@@ -73,6 +101,28 @@ void Grid::updateImage() {
 
 }
 
+void Grid::spray(int x, int y, int lr) {
+    int r = getSize().first < getSize().second  ? getSize().first /10 + sprayRadius_ : getSize().second /10 + sprayRadius_;
+    for(int i = 0; i < getSize().first; i++) {
+        for(int j = 0; j < getSize().second; j++) {
+            if( (i-x)*(i-x) + (j-y)*(j-y) < r*r) {
+                if (lr == 0)
+                    temp_[i][j] = tMax_;
+                if (lr == 1)
+                    temp_[i][j] = -tMax_;
+            }
+                
+        }
+    }
+    tempTmp_ = temp_;
+    updateImage();
+}
+
+void Grid::addSpray(int i) {
+    sprayRadius_ += i;
+}
+
+
 Grid::~Grid() {
 }
 
@@ -82,4 +132,18 @@ std::pair<int,int> Grid::getSize() {
 
 sf::Image Grid::getImage() {
     return image_;
+}
+
+void Grid::printMenu() {
+    std::cout<<"Instrukcja obslugi: "<<std::endl;
+    std::cout<<"Lewy przycisk myszki - dodaj ciepelko "<<std::endl;
+    std::cout<<"Prawy przycisk myszki - zabierz ciepelko "<<std::endl;
+    std::cout<<"Scroll - zmieniaj promien 'spraya' "<<std::endl;
+    std::cout<<"R - czerwony"<<std::endl;
+    std::cout<<"G - zielony "<<std::endl;
+    std::cout<<"O - niebieski "<<std::endl;
+    std::cout<<"Y - żółty "<<std::endl;
+    std::cout<<"C - cyan "<<std::endl;
+    std::cout<<"V - violet "<<std::endl;
+
 }

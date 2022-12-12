@@ -12,13 +12,20 @@ class Grid {
         sf::Image getImage();
         void updateImage();
         sf::Color makeCol(double t);
+        void spray(int x, int y,int lr);
+        void addSpray(int i);
+        void setColor(char i);
+        void printMenu();
     private:
         std::vector<std::vector<double>> temp_;
         std::vector<std::vector<double>> tempTmp_;
         std::pair<int,int> size_;
         sf::Image image_;
-        double heatTransf;
-        double tMax;
+        double heatTransf_;
+        double tMax_;
+        double sprayRadius_;
+        char color_;
+
 
         
 

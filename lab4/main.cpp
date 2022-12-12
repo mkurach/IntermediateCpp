@@ -18,7 +18,7 @@ int main()
     sf::Sprite sprite;
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect(0,0,width,height));
-    window.setFramerateLimit( 60 ); 
+    window.setFramerateLimit( 120 ); 
 
 
 
@@ -39,9 +39,9 @@ int main()
 
 
         window.clear();
-                        grid->updateImage();
-                image = grid->getImage();
-                texture.update(image);
+        grid->updateImage();
+        image = grid->getImage();
+        texture.update(image);
 
         window.draw(sprite);
         //window.draw(shape);

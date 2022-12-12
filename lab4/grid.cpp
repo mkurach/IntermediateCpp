@@ -1,78 +1,73 @@
 #include "grid.hpp"
 #include <time.h>
 #include <cstdlib>
+#include <math.h>
 
 Grid::Grid(int x, int y) {
 
     size_ = std::make_pair(x,y);
-    std::vector<std::vector<sf::Color>> vec( x, std::vector<sf::Color> (y, sf::Color::Blue));
-    grid_ = vec;
+    image_.create(x,y);
+    heatTransf = 0.25;
+    tMax = 100;
+
+    //initialize temperatures and colors
+    std::vector<std::vector<double>> vec( x, std::vector<double> (y, -tMax));
+    temp_ = vec;
 
 
     srand(time(0));
     
-    image_.create(x,y);
     int xS = rand()%x;
     int yS = rand()%y;
     int r = x < y ? x/10 : y/10;
     for(int i = 0; i < x; i++) {
         for(int j = 0; j < y; j++) {
             if( (i-xS)*(i-xS) + (j-yS)*(j-yS) < r*r)
-                grid_[i][j] = sf::Color::Red;
-            image_.setPixel(i,j,grid_[i][j]);
+                temp_[i][j] = tMax;
+            image_.setPixel(i,j,makeCol(temp_[i][j]));
         }
     }
-    gridTmp_ = grid_;
+    tempTmp_ = temp_;
+
+
+
+
+}
+
+sf::Color Grid::makeCol(double t) {
+    sf::Color col(0,0,0);
+    col.r = (int)(1/(1+exp(-t*2.0/tMax))*255);
+    col.b = 255 - (int)(1/(1+exp(-t*2.0/tMax))*255);
+
+    return col;
 }
 
 void Grid::updateImage() {
-    
+
+    double deltaT = 0;
     for(int x = 0; x < getSize().first; x++) {
         for(int y = 0; y < getSize().second; y++) {
-            if (x!=0) { //u góry
-                if(grid_[x-1][y].r != 0) {
-                    if (grid_[x-1][y].r != 0) gridTmp_[x-1][y].r--;
-                    if (grid_[x-1][y].b != 255) gridTmp_[x-1][y].b++;
-                    if(grid_[x][y].r != 255) gridTmp_[x][y].r++;
-                    if (grid_[x][y].b != 0) gridTmp_[x][y].b--;
-                }
-            }
+            if (x!=0)  //u góry
+                deltaT += (temp_[x][y] - temp_[x-1][y]);
+            if(x!=(getSize().first -1)) // u dołu
+                deltaT += (temp_[x][y] - temp_[x+1][y]);
+            if (y!=0)  //po lewo
+                deltaT += (temp_[x][y] - temp_[x][y-1]); 
+            if(y!=(getSize().second -1))  // po prawo
+                deltaT += (temp_[x][y] - temp_[x][y+1]);
 
-            if(x!=(getSize().first -1)) { // u dołu
-                if(grid_[x+1][y].r != 0) {
-                    if (grid_[x+1][y].r != 0) gridTmp_[x+1][y].r--;
-                    if (grid_[x+1][y].b != 255) gridTmp_[x+1][y].b++;
-                    if(grid_[x][y].r != 255) gridTmp_[x][y].r++;
-                    if (grid_[x][y].b != 0) gridTmp_[x][y].b--;
-                }
-            }
-
-            if (y!=0) { //po lewo
-                if(grid_[x][y-1].r != 0) {
-                    if (grid_[x][y-1].r != 0) gridTmp_[x][y-1].r--;
-                    if (grid_[x][y-1].b != 255) gridTmp_[x][y-1].b++;
-                    if(grid_[x][y].r != 255) gridTmp_[x][y].r++;
-                    if (grid_[x][y].b != 0) gridTmp_[x][y].b--;
-                }
-            }
-
-            if(y!=(getSize().second -1)) { // po prawo
-                if(grid_[x][y+1].r != 0) {
-                    if (grid_[x][y+1].r != 0) gridTmp_[x][y+1].r--;
-                    if (grid_[x][y+1].b != 255) gridTmp_[x][y+1].b++;
-                    if(grid_[x][y].r != 255) gridTmp_[x][y].r++;
-                    if (grid_[x][y].b != 0) gridTmp_[x][y].b--;
-                }
-            }
+            tempTmp_[x][y] -= heatTransf*deltaT;
+            deltaT = 0;        
 
         }
     }
 
-    grid_ = gridTmp_;
+    temp_ = tempTmp_;
 
-    for(int i = 0; i < getSize().first; i++) {
-        for(int j = 0; j < getSize().second; j++) {
-            image_.setPixel(i,j,grid_[i][j]);
+    for(int x = 0; x < getSize().first; x++) {
+        for(int y = 0; y < getSize().second; y++) {
+            image_.setPixel(x,y,makeCol(temp_[x][y]));
+
         }
     }
 

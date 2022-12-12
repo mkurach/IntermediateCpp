@@ -17,3 +17,7 @@ Codes from intermediate C++ laboratories.
 **lab3**
 - working on threads
 - counting elapsed time
+
+**lab4**
+- graphics
+- mouse events, keyboard events

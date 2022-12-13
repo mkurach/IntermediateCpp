@@ -21,3 +21,7 @@ Codes from intermediate C++ laboratories.
 **lab4**
 - graphics
 - mouse events, keyboard events
+
+**lab5**
+- regular expressions
+- ncursers

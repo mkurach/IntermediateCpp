@@ -1,7 +1,7 @@
 CC = g++
 LIBS = -lm
-CFLAGS = -Wall -pedantic -std=c++17 -lboost_system
-
+CFLAGS = -Wall -pedantic -std=c++17 -lboost_system -lpthread -lncurses
+ 
 all: lab5
 lab5: main.o script.o piec.o
 		$(CC) -o lab5 main.o script.o piec.o $(CFLAGS) $(LIBS)

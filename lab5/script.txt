@@ -1,5 +1,8 @@
-start 8
-izotermiczne 9
-rampa 1 2 334546
-skocz 80
+start 10
+rampa 10 100 10
+rampa 100 50 5
+izotermiczne 5
+skocz 70
+izotermiczne 5
+rampa 70 0 10
 end

@@ -5,40 +5,73 @@
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_point_data.h>
+#include <QStringList>
+#include <QComboBox>
+#include <QMenuBar>
+#include <QWidgetAction>
+#include <QMenu>
+#include <QApplication>
 
+#include <QApplication>
+#include<QSlider>
+#include<QSpinBox>
+#include<QHBoxLayout>
+#include<QWidget>
+#include<QMenuBar>
+#include<QStatusBar>
+#include <QMainWindow>
+#include <QObject>
+#include <QPushButton>
+
+void print(int i) {
+    std::cout<<i<<std::endl;
+}
 int main (int argc, char *arg[]) {
 
     Dane dane(arg[1]);
 
     QApplication app (argc, arg);  // Tworzenie okna programu
-    QWidget okno;
+    QMainWindow *w = new QMainWindow;
+
+    QWidget okno(w);
+    w->setCentralWidget(&okno);
     okno.setWindowTitle ("Dopasowanie MNK"); // ustawia tytuł okna
     okno.setFixedSize (800, 800); // rozmiar okna 800x800
 
     QwtPlot wykres (&okno); // Tworzenie wykresu na konkretnym oknie
-    
-    wykres.setTitle ("Dopasowanie MNK"); // Ustawienie tytułu wykresu
-
-    wykres.setAxisTitle (QwtPlot::xBottom, "Nr kanału"); // Ustawienia tytułów osi: yLeft, yRight, xBottom, xTop
-    wykres.setAxisTitle (QwtPlot::yLeft, "Napięcie / V");
-
-    wykres.setFixedSize (775, 775); // Ustawienie rozmiarów wykresu
-
-    wykres.setCanvasBackground(QBrush (QColor (0xff,0xfa, 0x6b))); // Ustawienie koloru tła
-
-    wykres.setAxisScale (QwtPlot::xBottom, dane.getMinX(), dane.getMaxX()); // Ustawienie zakresu osi
-    wykres.setAxisScale (QwtPlot::yLeft, dane.getMinY(), dane.getMaxY());
+    dane.setWykres(wykres);
 
     QwtPlotCurve dane_doswiadczalne;
-    dane_doswiadczalne.setSamples (dane.getX().data(), dane.getY().data(), dane.getX().size()); // twarde kopie danych
-
-    dane_doswiadczalne.setStyle (QwtPlotCurve::Dots);// Ustawienie stylu QwtPlotCurve: Lines, Sticks, Steps, Dots
-
-    dane_doswiadczalne.setPen (QPen (Qt::blue, 3));     // Ustawienie „pióra”: kolor, grubość:
-
+    dane.setDane(dane_doswiadczalne);
     dane_doswiadczalne.attach (&wykres);     // Dołączenie serii do istniejącego wykresu
 
+    QStringList colors = { "white","red","green","blue","cyan","magenta","yellow","gray","black"};
 
-    okno.show(); // pokazuje okno
+
+    QMenuBar *menu = new QMenuBar(&okno);
+    QMenu *colorMenu = new QMenu("&Color");
+    //colorMenu->addMenu("Red");
+    //colorMenu->addMenu("Green");
+
+    QComboBox *comboBox = new QComboBox(colorMenu);
+    comboBox->addItems(colors);
+    QWidgetAction *checkableAction = new QWidgetAction(colorMenu);
+    checkableAction->setDefaultWidget(comboBox);
+    colorMenu->addAction(checkableAction);
+    menu->addMenu(colorMenu);
+
+    QPushButton *button = new QPushButton("&Download", &okno);
+
+    //QObject::connect(comboBox,SIGNAL(currentIndexChanged(int)),dane_doswiadczalne,);
+
+
+
+
+
+
+
+    w->show();
+
+ 
     return app.exec();
 }

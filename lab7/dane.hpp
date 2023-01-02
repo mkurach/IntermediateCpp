@@ -2,6 +2,9 @@
 #define _dane_hpp_
 #include <vector>
 #include <string>
+#include <qwt/qwt_plot.h>
+#include <qwt/qwt_plot_curve.h>
+#include <qwt/qwt_point_data.h>
 
 
 class Dane{
@@ -14,10 +17,18 @@ class Dane{
         double getMinY();
         double getMaxX();
         double getMaxY();
+        void setWykres(QwtPlot &wykres); 
+        void setDane(QwtPlotCurve &dane_doswiadczalne);
+        void findParameters();
+        void makeRegression();
     protected:
         std::vector<double> x_;
         std::vector<double> y_;
+        std::vector<double> yLin_;
         double minX_,minY_,maxX_,maxY_;
+        double wMin_,wMax_,hMin_,hMax_;
+        double m_;
+        std::pair<float,float> params_;
 
 
 };

@@ -25,3 +25,10 @@ Codes from intermediate C++ laboratories.
 **lab5**
 - regular expressions
 - ncursers
+
+**lab6**
+- templates
+
+**lab7**
+- QT
+- drawing plot

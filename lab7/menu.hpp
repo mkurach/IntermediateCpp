@@ -16,8 +16,11 @@ class Menu : public QMenu {
 
     signals:
         void colorSelected(QColor newColor);
+        void addRegression();
+
     protected:
             QColor color_;
+            bool alreadyOn_;
 
 
 

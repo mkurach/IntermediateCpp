@@ -21,10 +21,11 @@ class Dane{
         void setDane(QwtPlotCurve &dane_doswiadczalne);
         void findParameters();
         void makeRegression();
-    protected:
-        std::vector<double> x_;
+                std::vector<double> x_;
         std::vector<double> y_;
         std::vector<double> yLin_;
+    protected:
+
         double minX_,minY_,maxX_,maxY_;
         double wMin_,wMax_,hMin_,hMax_;
         double m_;

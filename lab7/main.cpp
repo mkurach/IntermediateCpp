@@ -47,8 +47,8 @@ int main (int argc, char *arg[]) {
     dane.setDane(dane_doswiadczalne);
     dane_doswiadczalne.attach (&wykres);     // Dołączenie serii do istniejącego wykresu*/
 
-    Plot *plot = new Plot(dane.getX(),dane.getY(),wykres);
-    plot->dane_.attach(&wykres);
+    Plot *plot = new Plot(dane,wykres);
+    plot->daneCurv_.attach(&wykres);
 
 
     QStringList colors = { "white","red","green","blue","cyan","magenta","yellow","gray","black"};
@@ -56,7 +56,7 @@ int main (int argc, char *arg[]) {
 
     QMenuBar *menu = new QMenuBar(&okno);
     //QMenu *colorMenu = new QMenu("&Color");
-    Menu *colorMenu = new Menu("&Color");
+    Menu *colorMenu = new Menu("&Menu");
     //colorMenu->addMenu("Red");
     //colorMenu->addMenu("Green");
 
@@ -70,6 +70,7 @@ int main (int argc, char *arg[]) {
     //QPushButton *button = new QPushButton("&Download", &okno);
 
     QObject::connect(colorMenu,&Menu::colorSelected,plot,&Plot::setColor);
+    QObject::connect(colorMenu,&Menu::addRegression,plot,&Plot::drawRegression);
 
 
 

@@ -30,5 +30,5 @@ Codes from intermediate C++ laboratories.
 - templates
 
 **lab7**
-- QT
-- drawing plot
+- QT, creating my own signals and slots, qmake 
+- drawing plot and linear regression

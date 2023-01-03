@@ -2,6 +2,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 #include "dane.hpp"
+#include "menu.hpp"
+#include "plot.hpp"
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_point_data.h>
@@ -41,28 +43,33 @@ int main (int argc, char *arg[]) {
     QwtPlot wykres (&okno); // Tworzenie wykresu na konkretnym oknie
     dane.setWykres(wykres);
 
-    QwtPlotCurve dane_doswiadczalne;
+    /*QwtPlotCurve dane_doswiadczalne;
     dane.setDane(dane_doswiadczalne);
-    dane_doswiadczalne.attach (&wykres);     // Dołączenie serii do istniejącego wykresu
+    dane_doswiadczalne.attach (&wykres);     // Dołączenie serii do istniejącego wykresu*/
+
+    Plot *plot = new Plot(dane.getX(),dane.getY(),wykres);
+    plot->dane_.attach(&wykres);
+
 
     QStringList colors = { "white","red","green","blue","cyan","magenta","yellow","gray","black"};
 
 
     QMenuBar *menu = new QMenuBar(&okno);
-    QMenu *colorMenu = new QMenu("&Color");
+    //QMenu *colorMenu = new QMenu("&Color");
+    Menu *colorMenu = new Menu("&Color");
     //colorMenu->addMenu("Red");
     //colorMenu->addMenu("Green");
 
-    QComboBox *comboBox = new QComboBox(colorMenu);
+    /*QComboBox *comboBox = new QComboBox(colorMenu);
     comboBox->addItems(colors);
     QWidgetAction *checkableAction = new QWidgetAction(colorMenu);
     checkableAction->setDefaultWidget(comboBox);
-    colorMenu->addAction(checkableAction);
+    colorMenu->addAction(checkableAction);*/
     menu->addMenu(colorMenu);
 
-    QPushButton *button = new QPushButton("&Download", &okno);
+    //QPushButton *button = new QPushButton("&Download", &okno);
 
-    //QObject::connect(comboBox,SIGNAL(currentIndexChanged(int)),dane_doswiadczalne,);
+    QObject::connect(colorMenu,&Menu::colorSelected,plot,&Plot::setColor);
 
 
 

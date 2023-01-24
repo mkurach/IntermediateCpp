@@ -9,12 +9,14 @@ class Bird : public sf::CircleShape {
         Bird(float r);
         ~Bird();
 
-        void setVelocity(double v);
-        void updateValues();
+        void initValues(float x, float y);
+        void updatePosition();
     private:
-        double velocity_;
-        double vX_;
-        double vY_;
+        double velocity0_;
+        double velocityX_, velocityY_, velocity_;
+        float sin_, cos_;
+        double dt_;
+        double x_,y_;
 
 };
 

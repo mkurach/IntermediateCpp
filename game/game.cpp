@@ -38,7 +38,7 @@ void Game::initWindow() {
 
     size_ = std::make_pair(width,height);
     window_ = new sf::RenderWindow(sf::VideoMode(width,height), "Game");
-    window_->setFramerateLimit(5);
+    window_->setFramerateLimit(60);
 
 }
 
@@ -71,11 +71,10 @@ void Game::update() {
 
     pollEvents();
 
-    if(phase_ == 0){
+    if(phase_ == 0)
         updateMouse();
-        updateBird();
-    }
-
+        
+    updateBird();
 
     //end game condition
 }
@@ -93,13 +92,14 @@ void Game::updateBird() {
             lineBack_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
             lineFront_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
 
-            bird_->setVelocity(sqrt((315-mouse_.x)*(315-mouse_.x)+(400-mouse_.y)*(400-mouse_.y))/10);
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 phase_ = 1;
+                bird_->initValues(mouse_.x,mouse_.y);
+            }
         }
     }
     else if(phase_ == 1) {
+        bird_->updatePosition();
         
     }
 

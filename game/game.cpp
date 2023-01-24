@@ -7,7 +7,7 @@ Game::Game() {
     initTextures();
     initWindow();
     initBird();
-
+    initBoxes();
 }
 
 Game::~Game() {
@@ -19,6 +19,7 @@ void Game::initZmienne() {
     endGame_ = false;
     velocityZero_ = 0;
     phase_ = 0;
+    bottom_ = 600;
 }
 
 void Game::initTextures() {
@@ -56,6 +57,17 @@ void Game::initBird() {
 }
 
 
+void Game::initBoxes() {
+    for(int i = 0; i < 10; i++) {
+        //boxes_.push_back(new Box(75,40+i*10));
+        //boxes_[i]->setPosition(600+i*100, bottom_-40-i*10);
+        boxes_.push_back(new Box(rand()%10+70,rand()%50+50));
+        boxes_[i]->setPosition(rand()%500+600,rand()%100+450);
+
+    }
+
+}
+
 
 const bool Game::isRunning() const {
 	return window_->isOpen();
@@ -73,7 +85,7 @@ void Game::update() {
 
     if(phase_ == 0)
         updateMouse();
-        
+
     updateBird();
 
     //end game condition
@@ -87,7 +99,7 @@ void Game::updateMouse() {
 
 void Game::updateBird() {
     if(phase_ == 0) {
-        if(mouse_.x>50 && mouse_.x<500 && mouse_.y>420 && mouse_.y<700) {
+        if(mouse_.x>25 && mouse_.x<500 && mouse_.y>420 && mouse_.y<725) {
             bird_->setPosition(sf::Vector2f(mouse_.x-bird_->getRadius(),mouse_.y-bird_->getRadius()));
             lineBack_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
             lineFront_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
@@ -110,9 +122,13 @@ void Game::render() {
     window_->clear();
 
     window_->draw(background_);
+    for(auto b : boxes_)
+        window_->draw(*b);
     if(phase_ == 0) window_->draw(lineBack_,2,sf::Lines);
     window_->draw(*bird_);
     if(phase_ == 0) window_->draw(lineFront_,2,sf::Lines);
+
+
 
 
     window_->display();

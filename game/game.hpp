@@ -5,7 +5,10 @@
 #include <iostream>
 #include <map>
 #include <cmath>
+#include <vector>
 #include "bird.hpp"
+#include "box.hpp"
+#include <cstdlib>
 
 class Game{
     public:
@@ -17,6 +20,7 @@ class Game{
         void initWindow();
         void initTextures();
         void initBird();
+        void initBoxes();
 
         //logika gry
         const bool isRunning() const;
@@ -41,13 +45,15 @@ class Game{
 
         //obiekty
         std::map<std::string, sf::Texture*> textures_;
-        sf::Event ev_;
         Bird *bird_;
         sf::Vertex *lineBack_;
         sf::Vertex *lineFront_;
+        std::vector<Box*> boxes_;
 
 
         //zmienne
+        sf::Event ev_;
+        int bottom_;
         bool endGame_;
         double velocityZero_;
         int phase_;

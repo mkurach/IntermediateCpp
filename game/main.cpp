@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "bird.hpp"
 
 int main() {
 

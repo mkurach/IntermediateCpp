@@ -1,19 +1,24 @@
 #include "game.hpp"
 
+
 Game::Game() {
 
     initZmienne();
     initTextures();
     initWindow();
+    initBird();
 
 }
 
 Game::~Game() {
-   delete window_;
+    delete bird_;
+    delete window_;
 }
 
 void Game::initZmienne() { 
     endGame_ = false;
+    velocityZero_ = 0;
+    phase_ = 0;
 }
 
 void Game::initTextures() {
@@ -37,6 +42,18 @@ void Game::initWindow() {
 
 }
 
+void Game::initBird() {
+    bird_ = new Bird(20);
+
+    lineBack_ = new sf::Vertex[2];
+    lineFront_ = new sf::Vertex[2];
+
+    lineBack_[0] = sf::Vertex(sf::Vector2f(150, 500+bird_->getRadius()));
+    lineBack_[1] = sf::Vertex(sf::Vector2f(210, 420));
+
+    lineFront_[0] = sf::Vertex(sf::Vector2f(150, 500+bird_->getRadius()));
+    lineFront_[1] = sf::Vertex(sf::Vector2f(315, 400));
+}
 
 
 
@@ -48,20 +65,60 @@ const bool Game::getEndGame() const {
 	return endGame_;
 }
 
+
+
 void Game::update() {
-    //zupdateuj obiekty
-   pollEvents();
-    //end game condtion
+
+    pollEvents();
+
+    if(phase_ == 0){
+        updateMouse();
+        updateBird();
+    }
+
+
+    //end game condition
+}
+
+
+void Game::updateMouse() {
+    mouse_ = window_->mapPixelToCoords(sf::Mouse::getPosition(*window_));
+}
+
+
+void Game::updateBird() {
+    if(phase_ == 0) {
+        if(mouse_.x>50 && mouse_.x<500 && mouse_.y>420 && mouse_.y<700) {
+            bird_->setPosition(sf::Vector2f(mouse_.x-bird_->getRadius(),mouse_.y-bird_->getRadius()));
+            lineBack_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
+            lineFront_[0] = sf::Vertex(sf::Vector2f(mouse_.x-bird_->getRadius(), mouse_.y));
+
+            bird_->setVelocity(sqrt((315-mouse_.x)*(315-mouse_.x)+(400-mouse_.y)*(400-mouse_.y))/10);
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                phase_ = 1;
+        }
+    }
+    else if(phase_ == 1) {
+        
+    }
+
+
 }
 
 void Game::render() {
     window_->clear();
-    //render nowe rzeczy
+
     window_->draw(background_);
+    if(phase_ == 0) window_->draw(lineBack_,2,sf::Lines);
+    window_->draw(*bird_);
+    if(phase_ == 0) window_->draw(lineFront_,2,sf::Lines);
 
 
     window_->display();
 }
+
+
 
 void Game::pollEvents() {
 

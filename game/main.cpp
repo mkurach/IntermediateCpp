@@ -12,7 +12,7 @@ int main() {
         game.render();
     }
 
-
+    game.printResults();
 
     return 0;
 }

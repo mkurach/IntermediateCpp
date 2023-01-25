@@ -112,6 +112,7 @@ void Game::update() {
 
     if(pigsDown_ == 4) {
         endGame_ = true;
+        //phase_ = 3;
     }
 
 }
@@ -175,6 +176,8 @@ void Game::render() {
     if(phase_ == 0) window_->draw(lineFront_,2,sf::Lines);
 
 
+    //if (phase_ == 3) renderEnd();
+
 
 
     window_->display();
@@ -189,6 +192,19 @@ void Game::renderObstacles() {
 
 }
 
+void Game::renderEnd() {
+    window_->clear();
+    window_->draw(background_);
+    sf::Text text1;
+    text1.setString("KONIEC");
+    text1.setPosition(size_.first/2.0-text1.getScale().x/2.0,400);
+    text1.setCharacterSize(30);
+    text1.setFillColor(sf::Color::Black);
+
+    window_->draw(text1);
+
+
+}
 
 void Game::pollEvents() {
 
@@ -206,5 +222,15 @@ void Game::handleCollision() {
         if(i != (size_t)bird_->getCollisionPig())
             pigs_.push_back(pigsTmp[i]);
     }
+
+
+}
+
+void Game::printResults() {
+    std::cout<<"\n******************\n"<<std::endl;
+    std::cout<<"KONIEC\n"<<std::endl;
+    std::cout<<"Liczba prób:\t\t"<<tries_<<std::endl;
+    std::cout<<"\nLiczba świnek:\t\t"<<pigsDown_<<std::endl;
+        std::cout<<"\n******************\n"<<std::endl;
 }
 

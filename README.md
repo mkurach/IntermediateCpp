@@ -32,3 +32,7 @@ Codes from intermediate C++ laboratories.
 **lab7**
 - QT, creating my own signals and slots, qmake 
 - drawing plot and linear regression
+
+**Game**
+- ala Angry Birds game in sfml library
+- usage of Doxygen and cmake

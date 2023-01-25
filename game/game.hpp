@@ -7,7 +7,7 @@
 #include <cmath>
 #include <vector>
 #include "bird.hpp"
-#include "box.hpp"
+#include "obstacles.hpp"
 #include <cstdlib>
 
 class Game{
@@ -20,7 +20,8 @@ class Game{
         void initWindow();
         void initTextures();
         void initBird();
-        void initBoxes();
+        void initBoxes(int n);
+        void initPigs(int n);
 
         //logika gry
         const bool isRunning() const;
@@ -31,9 +32,11 @@ class Game{
         void updateBird();
 
         void render();
+        void renderObstacles();
 
         //metody
         void pollEvents();
+        void handleCollision();
 
     private:
         //window stuff
@@ -43,20 +46,22 @@ class Game{
         sf::Vector2f mouse_;
 
 
+
         //obiekty
         std::map<std::string, sf::Texture*> textures_;
         Bird *bird_;
         sf::Vertex *lineBack_;
         sf::Vertex *lineFront_;
         std::vector<Box*> boxes_;
+        std::vector<Pig*> pigs_;
 
 
         //zmienne
         sf::Event ev_;
-        int bottom_;
         bool endGame_;
-        double velocityZero_;
         int phase_;
+        int tries_;
+        int pigsDown_;
 
 
 

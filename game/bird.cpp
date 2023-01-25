@@ -1,10 +1,11 @@
 #include "bird.hpp"
 #include <iostream>
 
-Bird::Bird(float r) : sf::CircleShape(r) { 
+Bird::Bird(float r, std::vector<Pig*> vec, std::pair<int,int> screen) : sf::CircleShape(r) { 
     setFillColor(sf::Color::Red);
     setPosition(150, 500);
 
+    enemies_ = vec;
     velocity0_ = 0;
     sin_ = 0;
     cos_ = 0;
@@ -14,10 +15,15 @@ Bird::Bird(float r) : sf::CircleShape(r) {
     velocity_ = 0;
     velocityX_ = 0;
     velocityY_ = 0;
+    collision_ = false;
+    out_ = false;
+    collisionInt_ = 0;
+    screen_ = screen;
+
 }
 
 Bird::~Bird() {
-
+    enemies_.clear();
 }
 
 
@@ -43,4 +49,37 @@ void Bird::updatePosition() {
 
 
     setPosition(sf::Vector2f(x_,y_));
+}
+
+void Bird::checkCollision() {
+    for(size_t i = 0; i < enemies_.size(); i++) {
+        if(enemies_[i]->getGlobalBounds().intersects(getGlobalBounds())) {
+            collision_ = true;
+            collisionInt_ = (int)i;
+        }
+    }
+
+}
+void Bird::checkBorders() {
+    if( x_ > screen_.first-50 || y_ > screen_.second-50)
+        out_ = true;
+    
+}
+
+bool Bird::getCollisionStatus() {
+    return collision_;
+}
+
+bool Bird::getOutStatus() {
+    return out_;
+}
+int Bird::getCollisionPig() {
+    return collisionInt_;
+}
+
+void Bird::setCollisionStatus(bool i) {
+    collision_ = i;
+}
+void Bird::setOutStatus(bool i) {
+    out_ = i;
 }

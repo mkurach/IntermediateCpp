@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <algorithm>
 
 
 Game::Game() {
@@ -6,20 +7,23 @@ Game::Game() {
     initZmienne();
     initTextures();
     initWindow();
+    initBoxes(10);
+    initPigs(4);
     initBird();
-    initBoxes();
 }
 
 Game::~Game() {
+    boxes_.clear();
+    pigs_.clear();
     delete bird_;
     delete window_;
 }
 
 void Game::initZmienne() { 
     endGame_ = false;
-    velocityZero_ = 0;
     phase_ = 0;
-    bottom_ = 600;
+    tries_ = 0;
+    pigsDown_ = 0;
 }
 
 void Game::initTextures() {
@@ -44,7 +48,7 @@ void Game::initWindow() {
 }
 
 void Game::initBird() {
-    bird_ = new Bird(20);
+    bird_ = new Bird(20,pigs_,size_);
 
     lineBack_ = new sf::Vertex[2];
     lineFront_ = new sf::Vertex[2];
@@ -57,13 +61,31 @@ void Game::initBird() {
 }
 
 
-void Game::initBoxes() {
-    for(int i = 0; i < 10; i++) {
-        //boxes_.push_back(new Box(75,40+i*10));
-        //boxes_[i]->setPosition(600+i*100, bottom_-40-i*10);
-        boxes_.push_back(new Box(rand()%10+70,rand()%50+50));
-        boxes_[i]->setPosition(rand()%500+600,rand()%100+450);
+void Game::initBoxes(int n) {
+    std::vector<Box*> boxesTmp;
+    std::vector<float> yTmp;
+    for(int i = 0; i < n; i++) {
+        boxesTmp.push_back(new Box(rand()%10+70,rand()%50+50));
+        boxesTmp[i]->setPosition(rand()%500+600,rand()%100+450);
+        yTmp.push_back(boxesTmp[i]->getPosition().y);
+    }
 
+    std::sort(yTmp.begin(),yTmp.end());
+
+    for(auto y : yTmp) {
+        for(auto box : boxesTmp){
+            if(y==box->getPosition().y)
+                boxes_.push_back(box);
+        }
+    }
+
+
+}
+
+void Game::initPigs(int n) {
+    for (int i = 0; i < n; i++) {
+        pigs_.push_back(new Pig(30));
+        pigs_[i]->setPosition(boxes_[i]->getPosition().x,boxes_[i]->getPosition().y-2*pigs_[i]->getRadius()-5);
     }
 
 }
@@ -88,7 +110,10 @@ void Game::update() {
 
     updateBird();
 
-    //end game condition
+    if(pigsDown_ == 4) {
+        endGame_ = true;
+    }
+
 }
 
 
@@ -112,7 +137,27 @@ void Game::updateBird() {
     }
     else if(phase_ == 1) {
         bird_->updatePosition();
+
+        bird_->checkCollision();
+        if(bird_->getCollisionStatus()) 
+            phase_ = 2;
         
+        bird_->checkBorders();
+        if(bird_->getOutStatus()) {
+            initBird();
+            bird_->setOutStatus(false);
+            phase_ = 0;
+            tries_++;
+            
+        }
+    }
+    else if(phase_ == 2) {
+        handleCollision();
+        initBird();
+        bird_->setCollisionStatus(false);
+        phase_ = 0;
+        tries_++;
+        pigsDown_++;
     }
 
 
@@ -122,8 +167,9 @@ void Game::render() {
     window_->clear();
 
     window_->draw(background_);
-    for(auto b : boxes_)
-        window_->draw(*b);
+
+    renderObstacles();
+
     if(phase_ == 0) window_->draw(lineBack_,2,sf::Lines);
     window_->draw(*bird_);
     if(phase_ == 0) window_->draw(lineFront_,2,sf::Lines);
@@ -134,6 +180,14 @@ void Game::render() {
     window_->display();
 }
 
+void Game::renderObstacles() {
+    for(size_t i = 0; i < boxes_.size(); i++) {
+        if (i < pigs_.size())
+            window_->draw(*pigs_[i]);
+        window_->draw(*boxes_[i]);
+    }
+
+}
 
 
 void Game::pollEvents() {
@@ -143,3 +197,14 @@ void Game::pollEvents() {
             window_->close();
 	}
 }
+
+void Game::handleCollision() {
+
+    std::vector<Pig*> pigsTmp = pigs_;
+    pigs_.clear();
+    for(size_t i = 0; i < pigsTmp.size(); i++) {
+        if(i != (size_t)bird_->getCollisionPig())
+            pigs_.push_back(pigsTmp[i]);
+    }
+}
+
